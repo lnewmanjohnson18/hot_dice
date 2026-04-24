@@ -20,6 +20,7 @@ run/main_scene="res://scenes/MainMenu.tscn"
 GameConfig="*res://autoloads/GameConfig.gd"
 ScoringEngine="*res://autoloads/ScoringEngine.gd"
 GameManager="*res://autoloads/GameManager.gd"
+MultiplayerManager="*res://scripts/MultiplayerManager.cs"
 
 [dotnet]
 

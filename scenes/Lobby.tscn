@@ -1,0 +1,129 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/Lobby.cs" id="1_lobby"]
+
+[node name="Lobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_lobby")
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -310.0
+offset_right = 350.0
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+text = "Hot Dice — Multiplayer Lobby"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="PlayerNameRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+theme_override_constants/separation = 8
+
+[node name="NameLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/PlayerNameRow"]
+text = "Your Name:"
+custom_minimum_size = Vector2(100, 0)
+
+[node name="PlayerNameInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/PlayerNameRow"]
+size_flags_horizontal = 3
+text = "Player"
+placeholder_text = "Enter your name"
+
+[node name="HSep1" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+
+[node name="HostSection" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+theme_override_constants/separation = 6
+
+[node name="HostTitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/HostSection"]
+text = "Host a Game"
+theme_override_font_sizes/font_size = 16
+
+[node name="PortRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/HostSection"]
+theme_override_constants/separation = 8
+
+[node name="PortLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/HostSection/PortRow"]
+text = "Port:"
+custom_minimum_size = Vector2(50, 0)
+
+[node name="PortInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HostSection/PortRow"]
+size_flags_horizontal = 3
+text = "7777"
+placeholder_text = "7777"
+
+[node name="HostButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/HostSection"]
+text = "Host Game"
+
+[node name="HSep2" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+
+[node name="JoinSection" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+theme_override_constants/separation = 6
+
+[node name="JoinTitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/JoinSection"]
+text = "Join a Game"
+theme_override_font_sizes/font_size = 16
+
+[node name="JoinIPRow" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer/JoinSection"]
+theme_override_constants/separation = 8
+
+[node name="IPLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/JoinSection/JoinIPRow"]
+text = "IP:"
+custom_minimum_size = Vector2(30, 0)
+
+[node name="IPInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/JoinSection/JoinIPRow"]
+size_flags_horizontal = 3
+text = "127.0.0.1"
+placeholder_text = "Server IP address"
+
+[node name="JoinPortLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/JoinSection/JoinIPRow"]
+text = "Port:"
+
+[node name="JoinPortInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/JoinSection/JoinIPRow"]
+custom_minimum_size = Vector2(80, 0)
+text = "7777"
+placeholder_text = "7777"
+
+[node name="JoinButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/JoinSection"]
+text = "Join Game"
+
+[node name="HSep3" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+
+[node name="LobbySection" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+visible = false
+theme_override_constants/separation = 6
+
+[node name="PlayersLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/LobbySection"]
+text = "Players in Lobby:"
+theme_override_font_sizes/font_size = 16
+
+[node name="PlayerList" type="ItemList" parent="Panel/MarginContainer/VBoxContainer/LobbySection"]
+custom_minimum_size = Vector2(0, 120)
+
+[node name="StartButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/LobbySection"]
+text = "Start Game"
+visible = false
+
+[node name="DisconnectButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/LobbySection"]
+text = "Disconnect"
+
+[node name="StatusLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
