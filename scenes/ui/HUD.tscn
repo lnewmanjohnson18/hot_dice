@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://hud001"]
+
+[ext_resource type="Script" path="res://scenes/ui/HUD.gd" id="1_hud_script"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud_script")
+
+[node name="PlayerLabel" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_right = 100.0
+offset_top = 10.0
+offset_bottom = 40.0
+text = "Player 1's Turn"
+horizontal_alignment = 1
+
+[node name="ScoresLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_right = 0.0
+offset_left = 10.0
+offset_right = 200.0
+offset_top = 10.0
+offset_bottom = 80.0
+text = "Player 1: 0\nPlayer 2: 0"
+
+[node name="TurnScoreLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_right = 0.0
+offset_left = 10.0
+offset_right = 200.0
+offset_top = 90.0
+offset_bottom = 115.0
+text = "Turn: 0"
+
+[node name="StatusLabel" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_right = 150.0
+offset_top = -80.0
+offset_bottom = -55.0
+text = ""
+horizontal_alignment = 1
+
+[node name="BankButton" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = 120.0
+offset_top = -45.0
+offset_bottom = -10.0
+text = "Bank"
+
+[node name="RollButton" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_right = -10.0
+offset_top = -45.0
+offset_bottom = -10.0
+text = "Roll Again"

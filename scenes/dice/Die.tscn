@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://die001"]
+
+[ext_resource type="Script" path="res://scenes/dice/Die.gd" id="1_die_script"]
+
+[sub_resource type="BoxMesh" id="2_box_mesh"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="3_box_shape"]
+size = Vector3(1, 1, 1)
+
+[node name="Die" type="RigidBody3D"]
+script = ExtResource("1_die_script")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("2_box_mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("3_box_shape")

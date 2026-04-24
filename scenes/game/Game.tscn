@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://game001"]
+
+[ext_resource type="Script" path="res://scenes/game/Game.gd" id="1_game_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="2_hud_scene"]
+
+[sub_resource type="BoxMesh" id="3_table_mesh"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="BoxShape3D" id="4_table_shape"]
+size = Vector3(12, 0.2, 12)
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_game_script")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.766, 0.643, 0, -0.643, 0.766, 0, 8, 6)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 10, 5)
+light_energy = 1.2
+
+[node name="Table" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="TableMesh" type="MeshInstance3D" parent="Table"]
+mesh = SubResource("3_table_mesh")
+
+[node name="TableCollision" type="CollisionShape3D" parent="Table"]
+shape = SubResource("4_table_shape")
+
+[node name="HUD" parent="." instance=ExtResource("2_hud_scene")]

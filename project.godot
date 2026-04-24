@@ -13,6 +13,13 @@ config_version=5
 config/name="hot_dice"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+run/main_scene="res://scenes/game/Game.tscn"
+
+[autoload]
+
+GameConfig="*res://autoloads/GameConfig.gd"
+ScoringEngine="*res://autoloads/ScoringEngine.gd"
+GameManager="*res://autoloads/GameManager.gd"
 
 [dotnet]
 
