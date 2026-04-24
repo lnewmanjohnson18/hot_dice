@@ -72,6 +72,8 @@ public partial class Lobby : Control
 
     private void OnJoinPressed()
     {
+        if (Multiplayer.MultiplayerPeer != null) return;
+
         _manager.LocalPlayerName = SanitizeName(_playerNameInput.Text);
 
         string ip = _ipInput.Text.Trim();

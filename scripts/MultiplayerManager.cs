@@ -99,6 +99,10 @@ public partial class MultiplayerManager : Node
          TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void ReceivePlayerInfo(long peerId, string playerName)
     {
+        // Reject spoofed registrations: the claimed peerId must match the actual sender.
+        if (Multiplayer.IsServer() && peerId != (long)Multiplayer.GetRemoteSenderId())
+            return;
+
         Players[peerId] = playerName;
         EmitSignal(SignalName.PlayerConnected, peerId, playerName);
 
