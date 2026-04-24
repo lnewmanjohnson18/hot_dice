@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cq5m4rvjxqbkv"]
+
+[ext_resource type="Script" path="res://dice/Dice.cs" id="1_7hqnp"]
+
+[node name="Dice" type="Control"]
+custom_minimum_size = Vector2(80, 80)
+size = Vector2(80, 80)
+script = ExtResource("1_7hqnp")
