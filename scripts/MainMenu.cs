@@ -12,20 +12,14 @@ public partial class MainMenu : Control
 
 	private void OnPlayPressed()
 	{
-		// TODO: Load game scene when implemented
-		GD.Print("Play pressed");
 	}
 
 	private void OnMultiplayerPressed()
 	{
-		// TODO: Load multiplayer scene when implemented
-		GD.Print("Multiplayer pressed");
 	}
 
 	private void OnSettingsPressed()
 	{
-		// TODO: Load settings scene when implemented
-		GD.Print("Settings pressed");
 	}
 
 	private void OnQuitPressed()
