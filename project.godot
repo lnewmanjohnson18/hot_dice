@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="hot_dice"
-run/main_scene="res://scenes/MainMenu.tscn"
-config/features=PackedStringArray("4.5", "C#", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+run/main_scene="res://scenes/MainMenu.tscn"
 
 [autoload]
 
