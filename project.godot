@@ -10,18 +10,11 @@ config_version=5
 
 [application]
 
-config/name="hot_dice"
+config/name="Hot Dice"
+run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
-run/main_scene="res://scenes/MainMenu.tscn"
-
-[autoload]
-
-GameConfig="*res://autoloads/GameConfig.gd"
-ScoringEngine="*res://autoloads/ScoringEngine.gd"
-GameManager="*res://autoloads/GameManager.gd"
-MultiplayerManager="*res://scripts/MultiplayerManager.cs"
 
 [dotnet]
 
-project/assembly_name="hot_dice"
+project/assembly_name="Hot Dice"

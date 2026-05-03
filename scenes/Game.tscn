@@ -1,28 +1,189 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://cjk2m7n8pqr3s"]
 
-[ext_resource type="Script" path="res://scripts/Game.cs" id="1_game"]
+[ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://scripts/game.gd" id="1_game_script"]
+[ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="2_die_scene"]
+[ext_resource type="PackedScene" uid="uid://j76s1ik5hyq1" path="res://assets/models/PokerTableLowPollyColor.glb" id="3_lnu2h"]
 
-[node name="Game" type="Control"]
-anchor_right = 1.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bust"]
+bg_color = Color(0.08, 0.04, 0.04, 0.88)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hot_dice"]
+bg_color = Color(0.55, 0.38, 0.0, 0.92)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_game_script")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8660254, 0.43301272, -0.24999999, 0, 0.49999997, 0.86602545, 0.5, -0.75, 0.43301266, 0, 0, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 7, 6.521492)
+
+[node name="Dice" type="Node3D" parent="."]
+
+[node name="Die1" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die2" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die3" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die4" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die5" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die6" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RollButton" type="Button" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-script = ExtResource("1_game")
+offset_left = -100.0
+offset_top = -60.0
+offset_right = 100.0
+offset_bottom = -20.0
+text = "Roll Dice"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="LockInButton" type="Button" parent="UI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -60.0
+offset_right = 100.0
+offset_bottom = -20.0
+text = "Lock In"
+
+[node name="PassButton" type="Button" parent="UI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -60.0
+offset_right = -10.0
+offset_bottom = -20.0
+text = "Pass"
+
+[node name="RollAgainButton" type="Button" parent="UI"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -60.0
+offset_right = 220.0
+offset_bottom = -20.0
+text = "Roll Again"
+
+[node name="ScorePanel" type="VBoxContainer" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 12.0
+offset_right = 150.0
+offset_bottom = 105.0
+
+[node name="RollScoreLabel" type="Label" parent="UI/ScorePanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Roll: -"
+horizontal_alignment = 1
+
+[node name="TurnScoreLabel" type="Label" parent="UI/ScorePanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Turn: 0"
+horizontal_alignment = 1
+
+[node name="TotalScoreLabel" type="Label" parent="UI/ScorePanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Total: 0"
+horizontal_alignment = 1
+
+[node name="BustPopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -50.0
-offset_right = 150.0
-offset_bottom = 50.0
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bust")
+
+[node name="BustLabel" type="Label" parent="UI/BustPopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
-
-[node name="GameLabel" type="Label" parent="VBoxContainer"]
-text = "Game Scene (Placeholder)"
+theme_override_colors/font_color = Color(1, 0.88, 0.2, 1)
+theme_override_font_sizes/font_size = 40
+text = "You Busted!"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="BackButton" type="Button" parent="VBoxContainer"]
-text = "Back to Lobby"
+[node name="HotDicePopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hot_dice")
+
+[node name="HotDiceLabel" type="Label" parent="UI/HotDicePopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.4, 1)
+theme_override_font_sizes/font_size = 40
+text = "HOT DICE!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PokerTableLowPollyColor" parent="." instance=ExtResource("3_lnu2h")]
+
+[connection signal="pressed" from="UI/RollButton" to="." method="_on_roll_button_pressed"]
+[connection signal="pressed" from="UI/LockInButton" to="." method="_on_lock_in_pressed"]
+[connection signal="pressed" from="UI/PassButton" to="." method="_on_pass_pressed"]
+[connection signal="pressed" from="UI/RollAgainButton" to="." method="_on_roll_again_pressed"]

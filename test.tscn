@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://bqg2uj7ggx5fe"]
+
+[ext_resource type="Script" uid="uid://bwmuosqhxu5g2" path="res://test.gd" id="1_37kl0"]
+[ext_resource type="PackedScene" uid="uid://j76s1ik5hyq1" path="res://assets/models/PokerTableLowPollyColor.glb" id="2_8uh7m"]
+[ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="3_6uqi0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.1, 0.38, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mf4mk"]
+material = SubResource("StandardMaterial3D_1")
+size = Vector3(3, 0.1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_37kl0"]
+size = Vector3(3, 0.1, 2)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_37kl0")
+
+[node name="Table" type="StaticBody3D" parent="."]
+
+[node name="TableMesh" type="MeshInstance3D" parent="Table"]
+mesh = SubResource("BoxMesh_mf4mk")
+
+[node name="TableCollision" type="CollisionShape3D" parent="Table"]
+shape = SubResource("BoxShape3D_37kl0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6448264, 5.39102)
+
+[node name="PokerTableLowPollyColor" parent="." instance=ExtResource("2_8uh7m")]
+
+[node name="Die" parent="." instance=ExtResource("3_6uqi0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7338095, 2.1804333)
+
+[node name="Die2" parent="." instance=ExtResource("3_6uqi0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.353514, 2.1804333)
+
+[node name="Die3" parent="." instance=ExtResource("3_6uqi0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0556002, 2.1804333)
+
+[editable path="PokerTableLowPollyColor"]

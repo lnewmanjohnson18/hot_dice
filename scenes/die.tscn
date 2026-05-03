@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://die01234568aa"]
+
+[ext_resource type="Script" uid="uid://btayuf37lk0u4" path="res://scripts/die.gd" id="1_die_gd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_die"]
+albedo_color = Color(0.95, 0.92, 0.82, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_die"]
+material = SubResource("StandardMaterial3D_die")
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_die"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_die"]
+bounce = 0.3
+friction = 0.8
+
+[node name="Die" type="RigidBody3D"]
+freeze = true
+physics_material_override = SubResource("PhysicsMaterial_die")
+linear_damp = 0.5
+angular_damp = 1.5
+script = ExtResource("1_die_gd")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_die")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_die")

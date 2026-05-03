@@ -1,12 +1,3 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-.runtime/
-.claude/
-.logs/
-__pycache__/
-state.json
-CLAUDE.md
-CLAUDE.local.md
-.beads/
-*.csproj.old

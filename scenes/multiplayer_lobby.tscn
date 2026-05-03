@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=3 uid="uid://dm7x4hqn5yrk1"]
+
+[ext_resource type="Script" path="res://scripts/multiplayer_lobby.gd" id="1_lobby"]
+
+[node name="MultiplayerLobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_lobby")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 0)
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Multiplayer"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="SetupPanel" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="CenterContainer/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/SetupPanel"]
+layout_mode = 2
+
+[node name="IPLineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "127.0.0.1"
+placeholder_text = "Host IP Address"
+
+[node name="JoinButton" type="Button" parent="CenterContainer/VBoxContainer/SetupPanel"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="LobbyPanel" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+visible = false
+
+[node name="PlayersLabel" type="Label" parent="CenterContainer/VBoxContainer/LobbyPanel"]
+layout_mode = 2
+text = "Players:"
+
+[node name="PlayerList" type="VBoxContainer" parent="CenterContainer/VBoxContainer/LobbyPanel"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer/LobbyPanel"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/SetupPanel/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/SetupPanel/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/LobbyPanel/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

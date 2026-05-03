@@ -1,0 +1,107 @@
+[gd_scene load_steps=9 format=3 uid="uid://cjk2m7n8pqr3s"]
+
+[ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://scripts/game.gd" id="1_game_script"]
+[ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="2_die_scene"]
+[ext_resource type="Script" uid="uid://bck5idfr2rl57" path="res://scripts/table.gd" id="3_table_script"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_felt"]
+albedo_color = Color(0.13, 0.47, 0.18, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_felt"]
+material = SubResource("StandardMaterial3D_felt")
+top_radius = 1.4
+bottom_radius = 1.4
+height = 0.05
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_felt"]
+height = 0.05
+radius = 1.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.25, 0.1, 0.05, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_wall"]
+material = SubResource("StandardMaterial3D_wall")
+inner_radius = 1.3
+outer_radius = 1.6
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_game_script")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8660254, 0.43301272, -0.24999999, 0, 0.49999997, 0.86602545, 0.5, -0.75, 0.43301266, 0, 0, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 4, 4)
+
+[node name="Table" type="StaticBody3D" parent="."]
+script = ExtResource("3_table_script")
+
+[node name="FeltMesh" type="MeshInstance3D" parent="Table"]
+mesh = SubResource("CylinderMesh_felt")
+
+[node name="FeltCollision" type="CollisionShape3D" parent="Table"]
+shape = SubResource("CylinderShape3D_felt")
+
+[node name="WallMesh" type="MeshInstance3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+mesh = SubResource("TorusMesh_wall")
+
+[node name="Dice" type="Node3D" parent="."]
+
+[node name="Die1" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die2" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die3" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die4" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die5" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Die6" parent="Dice" instance=ExtResource("2_die_scene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RollButton" type="Button" parent="UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -60.0
+offset_right = 100.0
+offset_bottom = -20.0
+text = "Roll Dice"
+
+[node name="ScorePanel" type="VBoxContainer" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 12.0
+offset_right = 150.0
+offset_bottom = 72.0
+
+[node name="RollScoreLabel" type="Label" parent="UI/ScorePanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Roll: -"
+horizontal_alignment = 1
+
+[node name="TotalScoreLabel" type="Label" parent="UI/ScorePanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Total: 0"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="UI/RollButton" to="." method="_on_roll_button_pressed"]
