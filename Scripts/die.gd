@@ -2,10 +2,12 @@ extends RigidBody3D
 
 signal roll_completed(value: int)
 signal selection_changed
+signal debug_clicked
 
 var _rolling := false
 var _kept := false
 var _selectable := false
+var _debug_pip := false
 var _slide_tween: Tween
 
 const FACE_NORMALS = [
@@ -74,13 +76,34 @@ func set_selectable(value: bool) -> void:
 	_selectable = value
 
 
+func set_debug_pip(value: bool) -> void:
+	_debug_pip = value
+
+
 func _input_event(_camera: Camera3D, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape: int) -> void:
-	if _rolling or not _selectable:
-		return
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-			_set_kept(not _kept)
+			if _debug_pip:
+				if not _rolling:
+					debug_clicked.emit()
+			elif not _rolling and _selectable:
+				_set_kept(not _kept)
+
+
+func force_face(target_value: int) -> void:
+	var idx := FACE_VALUES.find(target_value)
+	if idx < 0:
+		return
+	_rolling = false
+	freeze = true
+	var src: Vector3 = FACE_NORMALS[idx]
+	if src.is_equal_approx(Vector3.UP):
+		quaternion = Quaternion.IDENTITY
+	elif src.is_equal_approx(Vector3.DOWN):
+		quaternion = Quaternion(Vector3.RIGHT, PI)
+	else:
+		quaternion = Quaternion(src.cross(Vector3.UP).normalized(), src.angle_to(Vector3.UP))
 
 
 func _set_kept(value: bool) -> void:
@@ -115,6 +138,11 @@ func shake_invalid() -> void:
 	)
 
 
+func restore_collision() -> void:
+	collision_layer = _default_collision_layer
+	collision_mask  = _default_collision_mask
+
+
 func set_out_of_play() -> void:
 	collision_layer = 0
 	collision_mask  = 0
@@ -135,17 +163,47 @@ func slide_to(target: Vector3, duration: float) -> void:
 	_slide_tween.tween_property(self, "global_position", target, duration)
 
 
-func roll(drop_position: Vector3) -> void:
+func slide_to_rest(pos: Vector3, rot_basis: Basis, duration: float) -> void:
+	if _slide_tween:
+		_slide_tween.kill()
+	collision_layer = 0
+	collision_mask  = 0
+	_rolling = false
+	freeze = true
+	_slide_tween = create_tween()
+	_slide_tween.set_ease(Tween.EASE_OUT)
+	_slide_tween.set_trans(Tween.TRANS_CUBIC)
+	_slide_tween.set_parallel(true)
+	_slide_tween.tween_property(self, "global_position", pos, duration)
+	_slide_tween.tween_property(self, "quaternion", Quaternion(rot_basis), duration)
+
+
+func place_at(pos: Vector3, rot_basis: Basis) -> void:
+	if _slide_tween:
+		_slide_tween.kill()
+		_slide_tween = null
+	collision_layer = 0
+	collision_mask  = 0
+	_rolling = false
+	freeze = true
+	global_position = pos
+	quaternion = Quaternion(rot_basis)
+
+
+func roll(drop_position: Vector3, throw_dir: Vector3 = Vector3(0.0, 0.0, -1.0)) -> void:
 	if _kept:
 		return
 	if _slide_tween:
 		_slide_tween.kill()
 		_slide_tween = null
+	collision_layer = _default_collision_layer
+	collision_mask  = _default_collision_mask
 	_rolling = true
 	global_position = drop_position
 	rotation = Vector3(0.0, randf_range(0.0, TAU), 0.0)
 	freeze = false
-	linear_velocity = Vector3(0.0, 0.0, randf_range(-7.5, -4.5))
+	var speed := randf_range(4.5, 7.5)
+	linear_velocity = Vector3(throw_dir.x * speed, 0.0, throw_dir.z * speed)
 	angular_velocity = Vector3(-6.0, 0.0, 0.0)
 
 

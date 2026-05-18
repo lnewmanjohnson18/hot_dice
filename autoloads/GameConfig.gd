@@ -19,3 +19,4 @@ const THREE_PAIRS_SCORE := 750
 # Game rules
 const NUM_DICE := 6
 const WIN_SCORE := 10000
+const UNLOCK_THRESHOLD := 1000

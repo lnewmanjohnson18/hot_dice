@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cjk2m7n8pqr3s"]
+[gd_scene load_steps=9 format=3 uid="uid://boywcx1wkqh1"]
 
-[ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://scripts/game.gd" id="1_game_script"]
+[ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://Scripts/game.gd" id="1_game_script"]
 [ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="2_die_scene"]
 [ext_resource type="PackedScene" uid="uid://j76s1ik5hyq1" path="res://assets/models/PokerTableLowPollyColor.glb" id="3_lnu2h"]
 
@@ -12,11 +12,25 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hot_dice"]
-bg_color = Color(0.55, 0.38, 0.0, 0.92)
+bg_color = Color(0.55, 0.38, 0, 0.92)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unlock"]
+bg_color = Color(0.04, 0.28, 0.1, 0.92)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="QuadMesh" id="QuadMesh_scoreboard"]
+size = Vector2(3.6, 2.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_scoreboard"]
+shading_mode = 0
+albedo_color = Color(0.07, 0.04, 0.02, 1)
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_game_script")
@@ -180,6 +194,38 @@ theme_override_font_sizes/font_size = 40
 text = "HOT DICE!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="UnlockPopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -270.0
+offset_top = -55.0
+offset_right = 270.0
+offset_bottom = 55.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_unlock")
+
+[node name="UnlockLabel" type="Label" parent="UI/UnlockPopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.45, 1, 0.55, 1)
+theme_override_font_sizes/font_size = 38
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Scoreboard" type="Node3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 12, -24)
+
+[node name="Background" type="MeshInstance3D" parent="Scoreboard"]
+mesh = SubResource("QuadMesh_scoreboard")
+surface_material_override/0 = SubResource("StandardMaterial3D_scoreboard")
 
 [node name="PokerTableLowPollyColor" parent="." instance=ExtResource("3_lnu2h")]
 
