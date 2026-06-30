@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b1dtq8f2m3y41"]
+[gd_scene load_steps=13 format=3 uid="uid://b1dtq8f2m3y41"]
 
 [ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://Scripts/game.gd" id="1_game_script"]
 [ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="2_die_scene"]
@@ -41,6 +41,13 @@ corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_hud"]
 bg_color = Color(0.18, 0.08, 0.32, 0.95)
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_confirm"]
+bg_color = Color(0.18, 0.08, 0.32, 0.96)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
@@ -360,6 +367,61 @@ text = "You Be Shopping"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ShopConfirmPopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -70.0
+offset_right = 240.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_shop_confirm")
+
+[node name="ShopConfirmLabel" type="Label" parent="UI/ShopConfirmPopup"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Select item?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ShopConfirmYes" type="Button" parent="UI/ShopConfirmPopup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -50.0
+offset_right = -6.0
+offset_bottom = -10.0
+text = "Yes"
+
+[node name="ShopConfirmNo" type="Button" parent="UI/ShopConfirmPopup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -50.0
+offset_right = -40.0
+offset_bottom = -10.0
+text = "No"
+
 [node name="Scoreboard" type="Node3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 12, -30)
 
@@ -377,3 +439,5 @@ transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0)
 [connection signal="pressed" from="UI/WarmDicePopup/WarmDiceYes" to="." method="_on_warm_dice_yes"]
 [connection signal="pressed" from="UI/WarmDicePopup/WarmDiceNo" to="." method="_on_warm_dice_no"]
 [connection signal="pressed" from="UI/ConfirmPassPopup/ConfirmPassNo" to="." method="_on_confirm_pass_no"]
+[connection signal="pressed" from="UI/ShopConfirmPopup/ShopConfirmYes" to="." method="_on_shop_confirm_yes"]
+[connection signal="pressed" from="UI/ShopConfirmPopup/ShopConfirmNo" to="." method="_on_shop_confirm_no"]

@@ -62,4 +62,9 @@
 - Switched standing-view mouse-look to FPS-style: mouse is captured on entering standing mode, released on returning to table; yaw accumulates from relative deltas with no clamp (full 360° spin); pitch clamped to ±75°; yaw/pitch reset immediately when returning to table view.
 - Fixed camera angle getting stuck during blend-back animation: added _cam_mouselook_active flag that disables mouse input the instant W/scroll is pressed, independent of the blend tween.
 - Made dice 50% bigger (0.4→0.6 cube): updated mesh, collision shape, face label offsets, rest stack step, and out-of-play pile height step.
+- Fixed shop items being unselectable: shop items had 0 charges so item.gd's `charges > 0` click guard blocked them and they rendered as depleted; added a `_shop_mode`/`set_shop_selectable` path so shop items are clickable and colored regardless of charges.
+- Added a "Select <item>?" Yes/No confirmation popup before a shop pick is committed (ShopConfirmPopup); picking now defers through the popup instead of buying immediately.
+- Fixed Blowfly charging on bust: only the busting player's Blowfly now gains a charge (via new _charge_player_item) instead of every player's Blowfly.
+- Fixed shop item color desync: shop items now always show their type color (red Heatchecker / green Blowfly) on every client, and the locally-pickable item glows via emission instead of being recolored solid gold.
+- Fixed shop clicks doing nothing: shop now forces the overhead table view (frees the mouse cursor) on open, and shop picks use a camera raycast fallback gated on is_shop_selectable() so the floating platform items are reliably clickable.
 

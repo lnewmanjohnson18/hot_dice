@@ -49,6 +49,8 @@ const ItemScene: PackedScene = preload("res://scenes/item.tscn")
 @onready var _scoreboard: Node3D         = $Scoreboard
 @onready var _shop_hud_panel: Panel      = $UI/ShopHudPanel
 @onready var _shop_hud_label: Label      = $UI/ShopHudPanel/ShopHudLabel
+@onready var _shop_confirm_popup: Panel  = $UI/ShopConfirmPopup
+@onready var _shop_confirm_label: Label  = $UI/ShopConfirmPopup/ShopConfirmLabel
 
 var _dice_done := 0
 var _rolling_count := 0
@@ -77,6 +79,7 @@ var _shop_pick_idx: int = 0
 var _shop_items: Array = []
 var _shop_platform: Node3D = null
 var _shop_had_first: bool = false
+var _pending_shop_item_idx: int = -1   # item awaiting Select-confirm popup (-1 = none)
 
 var _player_items: Dictionary = {}     # player_id -> Array of ItemNode
 var _reroll_mode_active: bool = false
@@ -468,7 +471,7 @@ func _trigger_hot_dice() -> void:
 
 func _show_bust_popup(roller_id: int) -> void:
 	if not multiplayer.has_multiplayer_peer() or multiplayer.is_server():
-		_charge_items("blowfly")
+		_charge_player_item(_current_player_id(), "blowfly")
 	var is_me := roller_id == 0 or \
 			(multiplayer.has_multiplayer_peer() and roller_id == multiplayer.get_unique_id())
 	_bust_label.text = "You Busted!" if is_me else "Player %d Busted!" % roller_id
@@ -948,7 +951,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if not _debug_cam_active:
 		if event is InputEventMouseButton and event.pressed:
-			match (event as InputEventMouseButton).button_index:
+			var clk: InputEventMouseButton = event as InputEventMouseButton
+			if _shop_phase_active and clk.button_index == MOUSE_BUTTON_LEFT:
+				_try_shop_pick_raycast(clk.position)
+			match clk.button_index:
 				MOUSE_BUTTON_WHEEL_UP:
 					_set_cam_blend(0.0)
 				MOUSE_BUTTON_WHEEL_DOWN:
@@ -1135,6 +1141,18 @@ func _set_items_selectable(player_id: int, selectable: bool) -> void:
 		(item as ItemNode).set_selectable(selectable)
 
 
+func _charge_player_item(player_id: int, item_type: String) -> void:
+	if not _player_items.has(player_id):
+		return
+	var items: Array = _player_items[player_id] as Array
+	for i in items.size():
+		var item: ItemNode = items[i] as ItemNode
+		if item.item_type == item_type:
+			item.add_charge()
+			if multiplayer.has_multiplayer_peer():
+				_sync_item_charge.rpc(player_id, i, item.charges)
+
+
 func _charge_items(item_type: String, except_player_id: int = -1) -> void:
 	for pid: int in _player_ids:
 		if pid == except_player_id:
@@ -1319,6 +1337,10 @@ func _begin_shop_phase(pick_order: Array[int], item_types: Array[String]) -> voi
 	_shop_pick_order = pick_order
 	_shop_pick_idx = 0
 	_roll_button.visible = false
+	# Drop to the overhead table view so the cursor is free to click shop items
+	# (standing view captures the mouse, which makes the platform unclickable).
+	if not _debug_cam_active:
+		_set_cam_blend(0.0)
 	_shop_hud_panel.visible = true
 	_update_shop_hud()
 	_create_shop_display(item_types)
@@ -1356,6 +1378,7 @@ func _create_shop_display(item_types: Array[String]) -> void:
 		var item: ItemNode = ItemScene.instantiate() as ItemNode
 		var x_pos: float = (i - (count - 1) * 0.5) * spacing
 		item.position = Vector3(x_pos, 0.4, 0.0)
+		item.set_shop_mode(true)
 		item.activated.connect(func(): _on_shop_item_selected(item))
 		item.mouse_entered.connect(func(): _show_item_tooltip(item))
 		item.mouse_exited.connect(_hide_item_tooltip)
@@ -1379,7 +1402,7 @@ func _activate_shop_picker() -> void:
 	for shop_item in _shop_items:
 		var item_node: ItemNode = shop_item as ItemNode
 		if is_instance_valid(item_node):
-			item_node.set_selectable(is_my_pick)
+			item_node.set_shop_selectable(is_my_pick)
 	_update_shop_hud()
 
 
@@ -1398,16 +1421,66 @@ func _find_shop_item_idx(item_node: Node3D) -> int:
 	return -1
 
 
+func _try_shop_pick_raycast(screen_pos: Vector2) -> void:
+	# Fallback picking for the floating shop platform: raycast from the camera and
+	# pick the item directly, independent of per-body _input_event hit testing.
+	if not _shop_phase_active or _shop_confirm_popup.visible:
+		return
+	var space := get_world_3d().direct_space_state
+	var from: Vector3 = _camera.project_ray_origin(screen_pos)
+	var to: Vector3 = from + _camera.project_ray_normal(screen_pos) * 1000.0
+	var query := PhysicsRayQueryParameters3D.create(from, to)
+	query.collide_with_areas = false
+	var hit: Dictionary = space.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var node: Node = hit.get("collider") as Node
+	while node != null and not (node is ItemNode):
+		node = node.get_parent()
+	if node == null:
+		return
+	var item: ItemNode = node as ItemNode
+	if _shop_items.has(item) and item.is_shop_selectable():
+		_on_shop_item_selected(item)
+
+
 func _on_shop_item_selected(item_node: Node3D) -> void:
 	if not _shop_phase_active:
 		return
 	var item_idx: int = _find_shop_item_idx(item_node)
 	if item_idx < 0:
 		return
+	var item: ItemNode = _shop_items[item_idx] as ItemNode
+	if not is_instance_valid(item):
+		return
+	_pending_shop_item_idx = item_idx
+	_shop_confirm_label.text = "Select %s?" % _item_display_name(item.item_type)
+	_shop_confirm_popup.visible = true
+
+
+func _item_display_name(item_type: String) -> String:
+	if item_type == "heatchecker":
+		return "Heatchecker"
+	elif item_type == "blowfly":
+		return "Blowfly"
+	return item_type
+
+
+func _on_shop_confirm_yes() -> void:
+	_shop_confirm_popup.visible = false
+	var item_idx: int = _pending_shop_item_idx
+	_pending_shop_item_idx = -1
+	if item_idx < 0:
+		return
 	if multiplayer.has_multiplayer_peer() and not multiplayer.is_server():
 		request_shop_pick.rpc_id(1, item_idx)
 	else:
 		_execute_shop_pick(item_idx)
+
+
+func _on_shop_confirm_no() -> void:
+	_shop_confirm_popup.visible = false
+	_pending_shop_item_idx = -1
 
 
 func _execute_shop_pick(item_idx: int) -> void:
@@ -1457,6 +1530,8 @@ func _apply_shop_pick_result(picker_id: int, item_idx: int, item_type: String) -
 func _end_shop_phase() -> void:
 	_shop_phase_active = false
 	_shop_hud_panel.visible = false
+	_shop_confirm_popup.visible = false
+	_pending_shop_item_idx = -1
 	_shop_items.clear()
 	if is_instance_valid(_shop_platform):
 		var tween := create_tween()
