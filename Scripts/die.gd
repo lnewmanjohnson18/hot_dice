@@ -3,10 +3,13 @@ extends RigidBody3D
 signal roll_completed(value: int)
 signal selection_changed
 signal debug_clicked
+signal reroll_requested
 
 var _rolling := false
 var _kept := false
+var _inherited := false   # dice locked before this player's turn (not rollable, not selectable, not scored)
 var _selectable := false
+var _reroll_mode := false
 var _debug_pip := false
 var _slide_tween: Tween
 
@@ -49,7 +52,7 @@ func _add_face_labels() -> void:
 	# Each entry: [face_value, position, rotation_euler]
 	# Positions sit just outside the 0.2 half-extent so labels clear the mesh surface.
 	# Rotations orient the label's +Z outward along the face normal.
-	var half := 0.201
+	var half := 0.301
 	var face_data: Array = [
 		[1, Vector3(0, half, 0),   Vector3(-PI / 2, 0, 0)],
 		[6, Vector3(0, -half, 0),  Vector3(PI / 2, 0, 0)],
@@ -80,13 +83,19 @@ func set_debug_pip(value: bool) -> void:
 	_debug_pip = value
 
 
+func set_reroll_mode(value: bool) -> void:
+	_reroll_mode = value
+
+
 func _input_event(_camera: Camera3D, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape: int) -> void:
 	if event is InputEventMouseButton:
-		var mb := event as InputEventMouseButton
+		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
 			if _debug_pip:
 				if not _rolling:
 					debug_clicked.emit()
+			elif _reroll_mode and not _rolling:
+				reroll_requested.emit()
 			elif not _rolling and _selectable:
 				_set_kept(not _kept)
 
@@ -130,8 +139,8 @@ func shake_invalid() -> void:
 	var origin := global_position
 	var tw := create_tween()
 	for i in 5:
-		tw.tween_property(self, "global_position", origin + Vector3(0.08, 0.0, 0.0), 0.05)
-		tw.tween_property(self, "global_position", origin - Vector3(0.08, 0.0, 0.0), 0.05)
+		tw.tween_property(self, "global_position", origin + Vector3(0.12, 0.0, 0.0), 0.05)
+		tw.tween_property(self, "global_position", origin - Vector3(0.12, 0.0, 0.0), 0.05)
 	tw.tween_property(self, "global_position", origin, 0.0)
 	tw.tween_callback(func() -> void:
 		_mesh.set_surface_override_material(0, _mat_kept if _kept else null)
@@ -148,10 +157,23 @@ func set_out_of_play() -> void:
 	collision_mask  = 0
 
 
+func set_inherited(value: bool) -> void:
+	_inherited = value
+	if value:
+		collision_layer = 0
+		collision_mask  = 0
+		freeze = true
+
+
+func is_inherited() -> bool:
+	return _inherited
+
+
 func reset_kept() -> void:
 	collision_layer = _default_collision_layer
 	collision_mask  = _default_collision_mask
 	_set_kept(false)
+	_inherited = false
 
 
 func slide_to(target: Vector3, duration: float) -> void:
@@ -191,7 +213,7 @@ func place_at(pos: Vector3, rot_basis: Basis) -> void:
 
 
 func roll(drop_position: Vector3, throw_dir: Vector3 = Vector3(0.0, 0.0, -1.0)) -> void:
-	if _kept:
+	if _kept or _inherited:
 		return
 	if _slide_tween:
 		_slide_tween.kill()

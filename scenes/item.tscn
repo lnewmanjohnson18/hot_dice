@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://clyaaqnlldisu"]
+
+[ext_resource type="Script" uid="uid://ditemscript01a" path="res://Scripts/item.gd" id="1_item_script"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_item"]
+size = Vector3(1.05, 0.72, 0.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_item"]
+size = Vector3(1.05, 0.72, 0.75)
+
+[node name="Item" type="StaticBody3D"]
+script = ExtResource("1_item_script")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_item")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_item")
+
+[node name="Label" type="Label3D" parent="."]
+pixel_size = 0.0025
+font_size = 64
+position = Vector3(0.0, 0.37, 0.0)
+rotation_degrees = Vector3(-90, 0, 0)
+horizontal_alignment = 1
+text = "Item"

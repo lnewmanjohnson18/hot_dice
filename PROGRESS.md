@@ -38,7 +38,28 @@
 - Added Shift+P pip debug mode: clicking any non-rolling die cycles its face value (1→2→…→6→1) by physically rotating the die; blue HUD label indicates the mode is active.
 - Fixed camera mouse-look: switched from relative delta to absolute screen position mapping so a given cursor position always corresponds to the same look angle regardless of how the cursor got there.
 - Fixed Hot Dice score reset: turn score is now accumulated into _accumulated_turn_score before dice are cleared, so banking after a Hot Dice correctly totals all rolls in the turn.
+- Added "warm dice" offer: when a player passes with dice still in play, the next player is offered a popup to take those remaining dice plus the passer's turn score, or decline for a fresh 6-dice roll.
+- Added confirmation popup when a locked player tries to Pass with < 1000 points: shows the score that will be discarded and requires explicit confirmation before proceeding.
+- Fixed camera alignment for players on long sides (P1/P2, P4/P5): table and standing views now project the look target onto the face plane instead of pointing at the global origin, so both players share an identical look direction perpendicular to their edge.
+- Audited all GDScript files for strict-typing issues: replaced every `:=` where the RHS returns Variant with an explicit type annotation — covers all SEAT_ANGLES array indexing (→ float), `as`-cast temporaries in game.gd and die.gd (→ concrete event types), untyped local array literal (→ Array[Vector3]), and _player_ids.duplicate() (→ Array[int]).
+- Updated warm dice popup message to show the passer's name, unlocked dice count, and turn score; changed "No" button text to "gimme new dice".
+- Fixed Shift+P pip debug mode for non-host players: force_face now routes through a server RPC so the MultiplayerSynchronizer doesn't overwrite the client's quaternion change.
+- Fixed warm dice popup never appearing: _end_turn() was resetting _warm_dice_count to 0 before checking it; now snapshots the values into locals first.
+- Fixed unlock popup and warm dice popup overlapping: warm dice popup now defers via _warm_dice_pending flag and shows only after the unlock popup's 3-second timer completes.
+- Fixed warm dice takeover: added _inherited state to die.gd so inherited locked dice are excluded from rolling count, selection, and hot dice detection without affecting the scoring system.
+- Fixed warm dice takeover resetting score to 0 and breaking the Roll button: _end_turn() was clearing _warm_dice_count/score/from before _apply_warm_dice_taken() could read them; those vars are now left intact until the yes/no handlers clear them.
+- Fixed Hot Dice not triggering after taking warm dice: hot dice threshold now subtracts inherited dice count so scoring all available warm dice correctly fires the popup.
+- Added Shop Phase: after all players unlock, a dark platform descends from the ceiling with items standing on top; players pick one item each in ascending score order; pick order and items are synced via RPC; a purple HUD tab at the top of the screen shows "<player> Be Shopping" during the phase; platform ascends and is freed when all picks are done.
+- Fixed item slot positions clipping inside the table rim: moved _BASE_ITEM_SLOTS Z from 4.0 to 2.0 (iterating through 3.6) so items sit on the flat felt surface rather than inside the raised rim wall.
+- Added Items system: each player starts with a Heatchecker (charges on Hot Dice, excluding the hot-dicer) and a Blowfly (charges on any bust); activating an item during the selection phase spends a charge and lets the player reroll one die; items are rendered as rectangular placeholders at each player's table edge with a charge pip display; full multiplayer support via request_item_activate/request_reroll_die RPCs and _sync_item_activated/_sync_item_charge/_sync_reroll_result RPCs.
+- Fixed item positions aligned to a perpendicular line: _item_slot_position now uses snapped face_a for the horizontal spread direction and raw seat angle only for the toward-player offset, so items always appear in a neat row perpendicular to the player's view; items also rotate to face_a so their labels face the player correctly.
+- Items are now twice as tall (box Y 0.36→0.72) and their labels lie flat on top instead of on the side; item Y positions updated so they sit on the table surface.
+- Fixed item label orientation: flipped X rotation from +90° to -90° so text reads correctly from each player's position.
+- Added cursor-following tooltips on items: hovering shows a dark panel with item name, description of what it does, and current charge pips; works for both player-seat items and shop platform items.
+- Doubled table size (GLB scale 2×1×2) and repositioned all gameplay elements to maintain the same gap from the felt edge: drop zones, item slots, out-of-play pile, dice rest offset, standing camera radius (11→14.5), and overhead camera offset (2→5.5).
+- Moved scoreboard back from Z=-24 to Z=-30 to restore the same visual gap from the doubled table's back edge.
+- Nudged standing camera radius farther back (14.5→17.0) and raised overhead table-view camera height (10→13) for a better view of the larger table.
+- Switched standing-view mouse-look to FPS-style: mouse is captured on entering standing mode, released on returning to table; yaw accumulates from relative deltas with no clamp (full 360° spin); pitch clamped to ±75°; yaw/pitch reset immediately when returning to table view.
+- Fixed camera angle getting stuck during blend-back animation: added _cam_mouselook_active flag that disables mouse input the instant W/scroll is pressed, independent of the blend tween.
+- Made dice 50% bigger (0.4→0.6 cube): updated mesh, collision shape, face label offsets, rest stack step, and out-of-play pile height step.
 
-# Open Issues
-
-- Any player after the first does not see a roll animation after their first roll.

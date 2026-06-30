@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://boywcx1wkqh1"]
+[gd_scene load_steps=12 format=3 uid="uid://b1dtq8f2m3y41"]
 
 [ext_resource type="Script" uid="uid://c2yi5pbgcl3vl" path="res://Scripts/game.gd" id="1_game_script"]
 [ext_resource type="PackedScene" uid="uid://die01234568aa" path="res://scenes/die.tscn" id="2_die_scene"]
@@ -22,6 +22,25 @@ corner_radius_bottom_left = 10
 bg_color = Color(0.04, 0.28, 0.1, 0.92)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_warm_dice"]
+bg_color = Color(0.35, 0.2, 0.04, 0.95)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_pass"]
+bg_color = Color(0.1, 0.06, 0.02, 0.95)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_hud"]
+bg_color = Color(0.18, 0.08, 0.32, 0.95)
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
@@ -203,9 +222,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -270.0
-offset_top = -55.0
+offset_top = -65.0
 offset_right = 270.0
-offset_bottom = 55.0
+offset_bottom = 65.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_unlock")
 
 [node name="UnlockLabel" type="Label" parent="UI/UnlockPopup"]
@@ -219,17 +238,142 @@ theme_override_colors/font_color = Color(0.45, 1, 0.55, 1)
 theme_override_font_sizes/font_size = 38
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="WarmDicePopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -70.0
+offset_right = 260.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_warm_dice")
+
+[node name="WarmDiceLabel" type="Label" parent="UI/WarmDicePopup"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.55, 1)
+theme_override_font_sizes/font_size = 18
+text = "The dice are warm."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="WarmDiceYes" type="Button" parent="UI/WarmDicePopup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -50.0
+offset_right = -6.0
+offset_bottom = -10.0
+text = "I'd be a fool not to"
+
+[node name="WarmDiceNo" type="Button" parent="UI/WarmDicePopup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -50.0
+offset_right = -12.0
+offset_bottom = -10.0
+text = "gimme new dice"
+
+[node name="ConfirmPassPopup" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -90.0
+offset_right = 300.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_confirm_pass")
+
+[node name="ConfirmPassLabel" type="Label" parent="UI/ConfirmPassPopup"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 14.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 108.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "You must score 1000 in a round to unlock your scoring before you can pass."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ConfirmPassNo" type="Button" parent="UI/ConfirmPassPopup"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = -52.0
+offset_right = -80.0
+offset_bottom = -12.0
+text = "Keep Rolling"
+
+[node name="ShopHudPanel" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_right = 180.0
+offset_bottom = 52.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_shop_hud")
+
+[node name="ShopHudLabel" type="Label" parent="UI/ShopHudPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "You Be Shopping"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Scoreboard" type="Node3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 12, -24)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 12, -30)
 
 [node name="Background" type="MeshInstance3D" parent="Scoreboard"]
 mesh = SubResource("QuadMesh_scoreboard")
 surface_material_override/0 = SubResource("StandardMaterial3D_scoreboard")
 
 [node name="PokerTableLowPollyColor" parent="." instance=ExtResource("3_lnu2h")]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0)
 
 [connection signal="pressed" from="UI/RollButton" to="." method="_on_roll_button_pressed"]
 [connection signal="pressed" from="UI/LockInButton" to="." method="_on_lock_in_pressed"]
 [connection signal="pressed" from="UI/PassButton" to="." method="_on_pass_pressed"]
 [connection signal="pressed" from="UI/RollAgainButton" to="." method="_on_roll_again_pressed"]
+[connection signal="pressed" from="UI/WarmDicePopup/WarmDiceYes" to="." method="_on_warm_dice_yes"]
+[connection signal="pressed" from="UI/WarmDicePopup/WarmDiceNo" to="." method="_on_warm_dice_no"]
+[connection signal="pressed" from="UI/ConfirmPassPopup/ConfirmPassNo" to="." method="_on_confirm_pass_no"]

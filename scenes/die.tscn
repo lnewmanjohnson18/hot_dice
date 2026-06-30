@@ -7,10 +7,10 @@ albedo_color = Color(0.95, 0.92, 0.82, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_die"]
 material = SubResource("StandardMaterial3D_die")
-size = Vector3(0.4, 0.4, 0.4)
+size = Vector3(0.6, 0.6, 0.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_die"]
-size = Vector3(0.4, 0.4, 0.4)
+size = Vector3(0.6, 0.6, 0.6)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_die"]
 bounce = 0.3
